@@ -16,7 +16,7 @@ if (!$resultado = $conexion->query($sql)){ # resultado->canal que se hace a la b
         echo "No existen resultados";
     }else{
         while($producto = $resultado->fetch_assoc()){ # traer datos[fetch]- array asociado[associated]
-            echo $producto['id'] . "- " . $producto['nombre'] . "<br>";
+            echo "<a href=\"/tiendita/producto.php?id=$id\">$nombre</a><br>";
         }
     }
 }
