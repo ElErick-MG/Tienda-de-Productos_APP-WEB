@@ -23,6 +23,10 @@ if (!isset($_SESSION['nombre']) || !isset($_SESSION['clave'])) {
             'nombre' => $product_name,
             'precio' => $product_price
         ];
+        
+        // Redirigir de vuelta al producto
+        header("Location: producto.php?id=" . $product_id);
+        exit();
     }
 }
 
