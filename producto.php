@@ -43,10 +43,13 @@ $prod = $results[0];
         <input type="hidden" name="product_id" value="<?php echo $id; ?>">
         <input type="hidden" name="product_name" value="<?php echo $prod['nombre']; ?>">
         <input type="hidden" name="product_price" value="<?php echo $prod['precio']; ?>">
-        <button type="submit">Agregar al Carrito</button>
+        <button type="submit">Agregar al Carrito 🛒</button>
     </form>
-    
-    <a href="carrito.php">Carrito</a>
+    <br>
+    <br>
+    <a href="carrito.php">Ir al Carrito 🛒</a>
+    <br>
+    <br>
     <p><a href="mipanel.php">Volver al Panel</a></p>
 </body>
 </html>

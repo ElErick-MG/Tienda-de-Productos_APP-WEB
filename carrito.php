@@ -46,8 +46,10 @@ if (!isset($_SESSION['nombre']) || !isset($_SESSION['clave'])) {
             }
             ?>
         </ul>
+        <br><br>
         <a href="mipanel.php">Panel Principal</a><br>
-        <a href="carrito.php">Carrito de Compra</a><br>
-        <a href="panelprincipal.php?logout=1">Cerrar Sesion</a>
+        
+        <br><br>
+        <a href="index.php">Cerrar Sesion</a>
     </body>
 </html>

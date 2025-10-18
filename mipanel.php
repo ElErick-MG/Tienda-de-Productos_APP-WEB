@@ -47,5 +47,8 @@ $titulo_productos = ($idioma === 'en') ? 'Product List' : 'Lista de Productos';
         <div>
             <?php include __DIR__ . '/conexion/cnn.php'; ?>
         </div>
+        <br>
+        <br>
+        <a href="carrito.php">Ir al Carrito 🛒</a>
     </body>
 </html>
