@@ -11,9 +11,17 @@ if ($conexion->connect_errno) {
     exit;
 }
 
-// Determine language from cookie (set in mipanel.php). Default to 'en'.
-$lang = isset($_COOKIE['lang']) ? $_COOKIE['lang'] : 'en';
-$lang = ($lang === 'es') ? 'es' : 'en';
+// Determine language from cookie (set in mipanel.php). Default to 'es'.
+if (isset($idioma)) {
+    $lang = ($idioma === 'es') ? 'es' : 'en';
+} elseif (isset($_GET['lang'])) {
+    $lang = ($_GET['lang'] === 'es') ? 'es' : 'en';
+} elseif (isset($_COOKIE['lang'])) {
+    $lang = ($_COOKIE['lang'] === 'es') ? 'es' : 'en';
+} else {
+    // Por defecto cuando no hay GET ni cookie ni variable proporcionada
+    $lang = 'es';
+}
 
 // Choose table based on language
 $table = ($lang === 'es') ? 'productoses' : 'productosen';

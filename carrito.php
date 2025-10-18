@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['nombre'])) {
-    header("Location: login.php");
-    exit();
+//Validar que las sesiones existen
+if (!isset($_SESSION['nombre']) || !isset($_SESSION['clave'])) {
+    header("Location:index.php");
 }
 
 ?>
