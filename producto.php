@@ -32,13 +32,20 @@ $prod = $results[0];
 <html lang="<?php echo $lang === 'es' ? 'es' : 'en'; ?>">
 <head>
     <meta charset="utf-8">
-    <title>Producto - <?php echo htmlspecialchars($prod['nombre'], ENT_QUOTES, 'UTF-8'); ?></title>
+    <title>Producto - <?php echo $prod['nombre']; ?></title>
 </head>
 <body>
-    <h1><?php echo htmlspecialchars($prod['nombre'], ENT_QUOTES, 'UTF-8'); ?></h1>
-    <p><strong>Descripción:</strong> <?php echo nl2br(htmlspecialchars($prod['descripcion'], ENT_QUOTES, 'UTF-8')); ?></p>
-    <p><strong>Precio:</strong> $<?php echo htmlspecialchars($prod['precio'], ENT_QUOTES, 'UTF-8'); ?></p>
+    <h1><?php echo "Id: " . $id . " - " . $prod['nombre']; ?></h1>
+    <p><strong>Descripción:</strong> <?php echo nl2br($prod['descripcion']); ?></p>
+    <p><strong>Precio:</strong> $<?php echo $prod['precio']; ?></p>
 
+    <form action="carrito.php" method="post">
+        <input type="hidden" name="product_id" value="<?php echo $id; ?>">
+        <input type="hidden" name="product_name" value="<?php echo $prod['nombre']; ?>">
+        <input type="hidden" name="product_price" value="<?php echo $prod['precio']; ?>">
+        <button type="submit">Agregar al Carrito</button>
+    </form>
+    
     <a href="carrito.php">Carrito</a>
     <p><a href="mipanel.php">Volver al Panel</a></p>
 </body>
