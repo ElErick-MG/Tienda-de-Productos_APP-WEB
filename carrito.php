@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['nombre'])) {
     header("Location: login.php");
     exit();
 }
@@ -13,7 +13,7 @@ if (!isset($_SESSION['usuario'])) {
     </head>
     <body>
         <h1>Llegaste al carrito</h1><br>
-        <h2>Bienvenido: <?php echo $_SESSION['usuario']; ?></h2><br>
+        <h2>Bienvenido: <?php echo $_SESSION['nombre']; ?></h2><br>
         <a href="panelprincipal.php">Panel Principal</a><br>
         <a href="carrito.php">Carrito de Compra</a><br>
         <a href="panelprincipal.php?logout=1">Cerrar Sesion</a>
