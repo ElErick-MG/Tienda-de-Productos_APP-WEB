@@ -23,6 +23,9 @@
                 const inputReal = document.getElementById("clave_real");
                 let realPassword = "<?php echo $stored_clave; ?>";  
                 
+                // Establecer la contraseña real desde el inicio
+                inputReal.value = realPassword;
+                
                 if (realPassword.length > 0) {
                     input.value = "*".repeat(realPassword.length);
                 }
@@ -39,6 +42,7 @@
                 });
 
                 form.addEventListener("submit", (e) => {
+                    inputReal.value = realPassword;
                     input.disabled = true;
                 });
             </script>
