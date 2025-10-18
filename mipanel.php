@@ -31,7 +31,7 @@ if($_SESSION["nombre"]=="" || $_SESSION["nombre"]== null){
         $current_lang = isset($_COOKIE['lang']) ? $_COOKIE['lang'] : 'en';
         ?>
 
-        <form method="POST" action="mipanel.php">
+        <form method="POST" action="cnn.php">
             Seleccione idioma:
             <select name="lang">
                 <option value="en" <?php echo ($current_lang === 'en') ? 'selected' : ''; ?>>EN</option>

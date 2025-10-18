@@ -1,0 +1,15 @@
+CREATE TABLE productoses (
+  id INT NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(255) DEFAULT NULL,
+  descripcion TEXT,
+  precio DECIMAL(10, 2) DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB;
+
+CREATE TABLE productosen (
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) DEFAULT NULL,
+  description TEXT,
+  price DECIMAL(10, 2) DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB;
