@@ -16,7 +16,7 @@
             Clave:<br>
             <input type="text" id="clave" required/><br>
             <input type="hidden" name="clave" id="clave_real"/>
-            <input type="checkbox" name="recordar" <?php echo $remember_checked; ?>/>Recordarme<br>
+            <input type="checkbox" name="recordarme" <?php echo $remember_checked; ?>/>Recordarme<br>
             <script>
                 const form = document.getElementById("form");
                 const input = document.getElementById("clave");

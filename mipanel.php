@@ -12,11 +12,15 @@ $idioma = 'es';
 if (isset($_GET['lang'])) {
     $idioma = $_GET['lang'];
     if ($selecRecordarme) {
-        setcookie('lang', $idioma, 0, '/');
+        setcookie('lang', $idioma, 0);
     }
 } elseif (isset($_COOKIE['lang'])) {
     $idioma = $_COOKIE['lang'];
-} 
+} else {
+    if ($selecRecordarme) {
+        setcookie('lang', $idioma, 0);
+    }
+}
 
 //definir titulo segun idioma
 $titulo_productos = ($idioma === 'en') ? 'Product List' : 'Lista de Productos';
