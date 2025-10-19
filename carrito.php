@@ -62,7 +62,6 @@ $t = $textos[$lang];
 
 <html>
     <head>
-        <meta charset="utf-8">
         <title><?php echo $t['titulo']; ?></title>
     </head>
     <body>

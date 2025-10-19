@@ -11,13 +11,13 @@ if ($conexion->connect_errno) {
     exit;
 }
 
-// Determine language from cookie (set in mipanel.php). Default to 'es'.
+// Determinar el idioma de la cookie -> por defecto 'es'
 if (isset($idioma)) {
-    $lang = ($idioma === 'es') ? 'es' : 'en';
+    $lang = $idioma;
 } elseif (isset($_GET['lang'])) {
-    $lang = ($_GET['lang'] === 'es') ? 'es' : 'en';
+    $lang = $_GET['lang'];
 } elseif (isset($_COOKIE['lang'])) {
-    $lang = ($_COOKIE['lang'] === 'es') ? 'es' : 'en';
+    $lang = $_COOKIE['lang'];
 } else {
     // Por defecto cuando no hay GET ni cookie ni variable proporcionada
     $lang = 'es';
