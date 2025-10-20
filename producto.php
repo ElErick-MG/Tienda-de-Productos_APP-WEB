@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once __DIR__ . '/conexion/DBConnection.php';
+include_once 'DBConnection.php';
 
 if (!isset($_SESSION['nombre']) || !isset($_SESSION['clave'])) {
     header("Location:index.php");
