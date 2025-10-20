@@ -45,7 +45,28 @@ $titulo_productos = ($idioma === 'en') ? 'Product List' : 'Lista de Productos';
         </nav>
         <h2><?php echo $titulo_productos; ?></h2>
         <div>
-            <?php include __DIR__ . '/conexion/cnn.php'; ?>
+            <?php
+            require_once __DIR__ . '/conexion/DBConnection.php';
+            
+            $lang = $idioma;
+            $table = ($lang === 'es') ? 'productoses' : 'productosen';
+            
+            $db = new DBConnection();
+            $productos = $db->read($table);
+            $db->close();
+            
+            if ($productos === false) {
+                echo "La consulta falló: ";
+            } elseif (count($productos) === 0) {
+                echo "No existen resultados";
+            } else {
+                foreach ($productos as $producto) {
+                    $id = (int)$producto['id'];
+                    $nombre = $producto['nombre'];
+                    echo "<a href=\"producto.php?id={$id}\">{$nombre}</a><br>";
+                }
+            }
+            ?>
         </div>
         <br>
         <br>
