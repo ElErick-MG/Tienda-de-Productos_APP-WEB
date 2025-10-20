@@ -46,7 +46,7 @@ $titulo_productos = ($idioma === 'en') ? 'Product List' : 'Lista de Productos';
         <h2><?php echo $titulo_productos; ?></h2>
         <div>
             <?php
-            require_once __DIR__ . '/conexion/DBConnection.php';
+            include_once __DIR__ . '/conexion/DBConnection.php';
             
             $lang = $idioma;
             $table = ($lang === 'es') ? 'productoses' : 'productosen';
