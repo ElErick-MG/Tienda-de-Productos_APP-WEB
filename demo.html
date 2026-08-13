@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Demo completa de la Tienda de Productos (Single Page Application).">
+  <title>Tienda de Productos — Demo</title>
+  <link rel="stylesheet" href="public/assets/css/style.css">
+  <style>
+    .view { display: none; }
+    .view.active { display: block; }
+    .demo-banner { background: var(--color-primary); color: white; padding: 0.5rem; text-align: center; font-size: 0.85rem; font-weight: bold; position: sticky; top: 0; z-index: 9999; }
+  </style>
+</head>
+<body id="app-body" class="login-page">
+
+  <div class="demo-banner">✨ MODO DEMO ESTÁTICO (JS) ACTIVO - FUNCIONALIDAD COMPLETA SIN SERVIDOR PHP ✨</div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="app-navbar" role="navigation" style="display: none;">
+    <div class="navbar-brand">
+      <div class="brand-icon">🛍️</div>
+      <span>Tienda de Productos</span>
+    </div>
+
+    <ul class="navbar-nav">
+      <li>
+        <a href="#" class="nav-link" id="nav-panel" onclick="navigate('panel')">
+          🏠 <span data-i18n="nav_panel">Panel</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" id="nav-cart" onclick="navigate('cart')">
+          🛒 <span data-i18n="nav_carrito">Mi Carrito</span>
+          <span id="cart-count-badge" class="cart-badge" style="display:none">0</span>
+        </a>
+      </li>
+    </ul>
+
+    <div style="display:flex;align-items:center;gap:0.5rem">
+      <div class="nav-lang">
+        <a href="#" id="lang-es" class="lang-btn active" onclick="setLang('es')">ES</a>
+        <a href="#" id="lang-en" class="lang-btn" onclick="setLang('en')">EN</a>
+      </div>
+      <div class="nav-divider"></div>
+      <a href="#" class="btn-logout" id="nav-logout" onclick="logout()">
+        🔓 <span data-i18n="nav_cerrar">Salir</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- VIEW: LOGIN -->
+  <main class="login-card view active" id="view-login" role="main">
+    <div class="login-logo"><div class="login-logo-icon">🛍️</div></div>
+    <div class="login-heading">
+      <h1 data-i18n="login_encabezado">Bienvenido de vuelta</h1>
+      <p data-i18n="login_subtitulo">Accede a tu tienda</p>
+    </div>
+    <div class="alert alert-error" id="login-error" style="display:none;" role="alert">
+      <span>⚠️</span><span data-i18n="login_error">Credenciales incorrectas.</span>
+    </div>
+    <form id="login-form" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label class="form-label" for="input-nombre" data-i18n="login_usuario">Usuario</label>
+        <input id="input-nombre" class="form-input" type="text" required placeholder="test (o cualquier nombre)">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="input-clave" data-i18n="login_clave">Contraseña</label>
+        <input id="input-clave" class="form-input" type="password" required placeholder="test123 (cualquier clave)">
+      </div>
+      <button class="btn btn-primary btn-full btn-lg" type="submit"><span data-i18n="login_btn">Entrar</span> →</button>
+    </form>
+  </main>
+
+  <!-- VIEW: PANEL -->
+  <main class="page-wrapper view" id="view-panel" role="main">
+    <header class="page-header">
+      <h1 data-i18n="panel_titulo">Catálogo de Productos</h1>
+      <p><span data-i18n="bienvenido">Bienvenido</span>, <strong id="user-name-display">Invitado</strong></p>
+    </header>
+    <section aria-label="Catálogo">
+      <div class="products-grid" id="products-grid-container">
+        <!-- Generado por JS -->
+      </div>
+    </section>
+  </main>
+
+  <!-- VIEW: PRODUCTO DETALLE -->
+  <main class="page-wrapper view" id="view-producto" role="main">
+    <a href="#" class="back-link" onclick="navigate('panel')">← <span data-i18n="volver">Volver</span></a>
+    <div class="detail-card" id="product-detail-container">
+      <!-- Generado por JS -->
+    </div>
+  </main>
+
+  <!-- VIEW: CARRITO -->
+  <main class="page-wrapper view" id="view-cart" role="main">
+    <header class="page-header">
+      <h1 data-i18n="cart_titulo">Carrito de Compras</h1>
+      <p><span data-i18n="bienvenido">Bienvenido</span>, <strong id="user-name-cart">Invitado</strong></p>
+    </header>
+    <section class="cart-container" id="cart-container-inner">
+      <!-- Generado por JS -->
+    </section>
+  </main>
+
+  <script src="public/assets/js/main.js"></script>
+  <script>
+    // --- DATOS MOCK ---
+    const data = {
+      products: {
+        es: [
+          { id: 1, icon: '👕', name: 'Camiseta básica', desc: 'Camiseta de algodón 100% color blanco', price: 9.99 },
+          { id: 2, icon: '👖', name: 'Pantalón de mezclilla', desc: 'Pantalón de jean azul para hombre', price: 24.50 },
+          { id: 3, icon: '👟', name: 'Zapatillas deportivas', desc: 'Zapatillas ligeras para correr', price: 39.90 },
+          { id: 4, icon: '⌚', name: 'Reloj digital', desc: 'Reloj resistente al agua con cronómetro', price: 19.75 },
+          { id: 5, icon: '🎒', name: 'Mochila escolar', desc: 'Mochila con múltiples compartimientos', price: 15.20 },
+          { id: 6, icon: '🧢', name: 'Gorra ajustable', desc: 'Gorra de color negro con logotipo bordado', price: 8.99 },
+          { id: 7, icon: '🎧', name: 'Audífonos Bluetooth', desc: 'Auriculares inalámbricos con micrófono', price: 29.99 }
+        ],
+        en: [
+          { id: 1, icon: '👕', name: 'Basic T-Shirt', desc: '100% cotton white t-shirt', price: 9.99 },
+          { id: 2, icon: '👖', name: 'Denim Jeans', desc: 'Blue jeans for men', price: 24.50 },
+          { id: 3, icon: '👟', name: 'Running Sneakers', desc: 'Lightweight sneakers for running', price: 39.90 },
+          { id: 4, icon: '⌚', name: 'Digital Watch', desc: 'Waterproof watch with stopwatch', price: 19.75 },
+          { id: 5, icon: '🎒', name: 'School Backpack', desc: 'Backpack with multiple compartments', price: 15.20 },
+          { id: 6, icon: '🧢', name: 'Adjustable Cap', desc: 'Black cap with embroidered logo', price: 8.99 },
+          { id: 7, icon: '🎧', name: 'Bluetooth Headphones', desc: 'Wireless earbuds with microphone', price: 29.99 }
+        ]
+      },
+      texts: {
+        es: {
+          nav_panel: 'Panel Principal', nav_carrito: 'Mi Carrito', nav_cerrar: 'Cerrar Sesión',
+          login_encabezado: 'Bienvenido de vuelta', login_subtitulo: 'Accede a tu tienda',
+          login_usuario: 'Usuario', login_clave: 'Contraseña', login_btn: 'Entrar', login_error: 'Credenciales incorrectas.',
+          panel_titulo: 'Catálogo de Productos', bienvenido: 'Bienvenido', ver_detalle: 'Ver detalle',
+          volver: 'Volver al Catálogo', agregar: 'Agregar al Carrito',
+          cart_titulo: 'Carrito de Compras', productos_cart: 'Productos en el carrito:', sin_productos: 'Tu carrito está vacío.',
+          subtotal: 'Total a pagar:', vaciar: 'Vaciar carrito', descripcion: 'Descripción', precio: 'Precio', vaciar_confirm: '¿Vaciar el carrito?'
+        },
+        en: {
+          nav_panel: 'Main Panel', nav_carrito: 'My Cart', nav_cerrar: 'Log Out',
+          login_encabezado: 'Welcome back', login_subtitulo: 'Access your store',
+          login_usuario: 'Username', login_clave: 'Password', login_btn: 'Sign In', login_error: 'Incorrect credentials.',
+          panel_titulo: 'Product Catalog', bienvenido: 'Welcome', ver_detalle: 'View details',
+          volver: 'Back to Catalog', agregar: 'Add to Cart',
+          cart_titulo: 'Shopping Cart', productos_cart: 'Products in cart:', sin_productos: 'Your cart is empty.',
+          subtotal: 'Total to pay:', vaciar: 'Clear cart', descripcion: 'Description', precio: 'Price', vaciar_confirm: 'Clear your cart?'
+        }
+      }
+    };
+
+    // --- ESTADO GLOBAL ---
+    let currentLang = localStorage.getItem('demo_lang') || 'es';
+    let currentUser = localStorage.getItem('demo_user') || null;
+    let cart = JSON.parse(localStorage.getItem('demo_cart')) || [];
+    let currentView = 'login';
+    let currentProductId = null;
+
+    // --- FUNCIONES CORE ---
+    function init() {
+      if (currentUser) {
+        document.getElementById('user-name-display').textContent = currentUser;
+        document.getElementById('user-name-cart').textContent = currentUser;
+        navigate('panel');
+      } else {
+        navigate('login');
+      }
+      setLang(currentLang);
+      updateCartBadge();
+    }
+
+    function navigate(view, params = {}) {
+      currentView = view;
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      
+      const body = document.getElementById('app-body');
+      const nav = document.getElementById('app-navbar');
+
+      if (view === 'login') {
+        body.classList.add('login-page');
+        nav.style.display = 'none';
+        document.getElementById('view-login').classList.add('active');
+      } else {
+        body.classList.remove('login-page');
+        nav.style.display = 'flex';
+        
+        if (view === 'panel') {
+          document.getElementById('nav-panel').classList.add('active');
+          document.getElementById('view-panel').classList.add('active');
+          renderPanel();
+        } else if (view === 'product') {
+          currentProductId = params.id;
+          document.getElementById('view-producto').classList.add('active');
+          renderProduct();
+        } else if (view === 'cart') {
+          document.getElementById('nav-cart').classList.add('active');
+          document.getElementById('view-cart').classList.add('active');
+          renderCart();
+        }
+      }
+      applyTranslations();
+    }
+
+    function setLang(lang) {
+      currentLang = lang;
+      localStorage.setItem('demo_lang', lang);
+      document.getElementById('lang-es').classList.toggle('active', lang === 'es');
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      applyTranslations();
+      
+      if (currentView === 'panel') renderPanel();
+      if (currentView === 'product') renderProduct();
+      if (currentView === 'cart') renderCart();
+    }
+
+    function applyTranslations() {
+      const texts = data.texts[currentLang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (texts[key]) el.textContent = texts[key];
+      });
+      document.title = texts.titulo_pagina || 'Tienda - Demo';
+    }
+
+    // --- AUTH ---
+    function handleLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('input-nombre').value;
+      if (user) {
+        currentUser = user;
+        localStorage.setItem('demo_user', user);
+        document.getElementById('user-name-display').textContent = user;
+        document.getElementById('user-name-cart').textContent = user;
+        navigate('panel');
+      }
+    }
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('demo_user');
+      navigate('login');
+    }
+
+    // --- RENDERIZADO MOCK ---
+    function renderPanel() {
+      const prods = data.products[currentLang];
+      const t = data.texts[currentLang];
+      const container = document.getElementById('products-grid-container');
+      container.innerHTML = prods.map((p, i) => `
+        <article class="product-card">
+          <div class="product-card-icon icon-${i % 7}">${p.icon}</div>
+          <div class="product-card-name">${p.name}</div>
+          <div class="product-card-footer">
+            <a href="#" class="product-card-link" onclick="navigate('product', {id: ${p.id}}); return false;">
+              ${t.ver_detalle} →
+            </a>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function renderProduct() {
+      const p = data.products[currentLang].find(x => x.id === currentProductId);
+      const t = data.texts[currentLang];
+      const container = document.getElementById('product-detail-container');
+      if (!p) return;
+      container.innerHTML = `
+        <div class="detail-badge"><span>${p.icon}</span><span>ID #${p.id}</span></div>
+        <h1 class="detail-title">${p.name}</h1>
+        <p class="detail-description"><strong>${t.descripcion}:</strong><br>${p.desc}</p>
+        <div class="detail-price"><span class="price-label">${t.precio}:</span><span class="price-value">$${p.price.toFixed(2)}</span></div>
+        <button class="btn btn-primary btn-full btn-lg" onclick="addToCart(${p.id})">
+          🛒 ${t.agregar}
+        </button>
+      `;
+    }
+
+    function renderCart() {
+      const container = document.getElementById('cart-container-inner');
+      const t = data.texts[currentLang];
+      
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="cart-empty">
+            <span class="empty-icon">🛒</span>
+            <p>${t.sin_productos}</p>
+            <a href="#" class="btn btn-primary" style="margin-top:1.25rem" onclick="navigate('panel'); return false;">Explorar catálogo →</a>
+          </div>`;
+        return;
+      }
+      
+      let total = 0;
+      let html = `<h2 style="font-size:0.85rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1rem;">${t.productos_cart} <span class="chip" style="margin-left:0.5rem">${cart.length}</span></h2><ul class="cart-list">`;
+      
+      cart.forEach(item => {
+        total += item.price;
+        html += `<li class="cart-item"><span class="cart-item-name">🛍️ ${item.name}</span><span class="cart-item-price">$${item.price.toFixed(2)}</span></li>`;
+      });
+      
+      html += `</ul>
+        <div class="cart-total"><span class="cart-total-label">${t.subtotal}</span><span class="cart-total-value">$${total.toFixed(2)}</span></div>
+        <div style="margin-top:1.5rem;display:flex;gap:0.75rem;flex-wrap:wrap">
+          <a href="#" class="btn btn-ghost" onclick="navigate('panel'); return false;">← ${t.volver}</a>
+          <button class="btn btn-danger" onclick="if(confirm('${t.vaciar_confirm}')) clearCart()">🗑️ ${t.vaciar}</button>
+        </div>`;
+      
+      container.innerHTML = html;
+    }
+
+    // --- CARRITO FUNCIONALIDAD ---
+    function addToCart(id) {
+      const p = data.products[currentLang].find(x => x.id === id);
+      cart.push({ id: p.id, name: p.name, price: p.price });
+      localStorage.setItem('demo_cart', JSON.stringify(cart));
+      updateCartBadge();
+      
+      if (typeof window.showToast === 'function') {
+        const addedText = currentLang === 'en' ? 'Added to cart' : 'Agregado al carrito';
+        window.showToast('✔️ ' + addedText);
+      } else {
+        alert('Agregado al carrito');
+      }
+      navigate('cart');
+    }
+
+    function clearCart() {
+      cart = [];
+      localStorage.setItem('demo_cart', JSON.stringify(cart));
+      updateCartBadge();
+      renderCart();
+    }
+
+    function updateCartBadge() {
+      const badge = document.getElementById('cart-count-badge');
+      badge.textContent = cart.length;
+      badge.style.display = cart.length > 0 ? 'inline-block' : 'none';
+      
+      // Update meta tag for toast JS logic
+      let meta = document.getElementById('cart-count-meta');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.id = 'cart-count-meta';
+        meta.name = 'cart-count';
+        document.head.appendChild(meta);
+      }
+      meta.content = cart.length;
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
